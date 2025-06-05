@@ -1,5 +1,5 @@
-#ifndef MATRIX_hpp
-#define MATRIX_hpp
+#ifndef matrix_hpp
+#define matrix_hpp
 
 #include <cassert>
 #include <iostream>
