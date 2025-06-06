@@ -1,7 +1,5 @@
 // src/Vector.cpp
-#include "Vector.hpp"
-#include <cassert>
-#include <stdexcept>
+#include "../include/Vector.hpp"
 
 Vector::Vector(int size) : mSize(size) {
     mData = new double[mSize]{};
@@ -30,11 +28,19 @@ Vector& Vector::operator=(const Vector& other) {
     return *this;
 }
 
+// 0-based index, non-const
 double& Vector::operator[](int index) {
     assert(index >= 0 && index < mSize);
     return mData[index];
 }
 
+// 0-based index, const version
+double Vector::operator[](int index) const {
+    assert(index >= 0 && index < mSize);
+    return mData[index];
+}
+
+// 1-based index with check
 double& Vector::operator()(int index) {
     if (index < 1 || index > mSize) {
         throw std::out_of_range("Index out of bounds (1-based)");
@@ -42,6 +48,7 @@ double& Vector::operator()(int index) {
     return mData[index - 1];
 }
 
+// Vector + Vector
 Vector Vector::operator+(const Vector& other) const {
     assert(mSize == other.mSize);
     Vector result(mSize);
@@ -50,6 +57,7 @@ Vector Vector::operator+(const Vector& other) const {
     return result;
 }
 
+// Vector - Vector
 Vector Vector::operator-(const Vector& other) const {
     assert(mSize == other.mSize);
     Vector result(mSize);
@@ -58,6 +66,7 @@ Vector Vector::operator-(const Vector& other) const {
     return result;
 }
 
+// Vector * scalar
 Vector Vector::operator*(double scalar) const {
     Vector result(mSize);
     for (int i = 0; i < mSize; ++i)
