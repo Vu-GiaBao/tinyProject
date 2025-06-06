@@ -1,4 +1,4 @@
-#include "regression/Regression.hpp"
+#include "Regression.hpp"
 #include <iostream>
 
 int main() {

@@ -1,7 +1,7 @@
 # Part A
 
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Iinclude
+CXXFLAGS = -std=c++17 -Wall -Iinclude -Iregression
 
 # List of source files
 VECTOR_SRC = src/Vector.cpp
@@ -40,15 +40,31 @@ run_matrix:
 run_linear:
 	./$(BIN_LINEAR)
 
-clean:
-	rm -f $(BIN_VECTOR) $(BIN_MATRIX) $(BIN_LINEAR)
 
 test_LinearSystem: test_linear
 
 
 # Part B
-regression_main: regression_main.cpp regression/Regression.cpp $(VECTOR_SRC) $(MATRIX_SRC) $(LINEAR_SRC)
+
+regression_main: regression/regression_main.cpp regression/Regression.cpp $(VECTOR_SRC) $(MATRIX_SRC) $(LINEAR_SRC)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 run_regression:
 	./regression_main
+
+# Build all
+BIN_VECTOR = test_vector
+BIN_MATRIX = test_matrix
+BIN_LINEAR = test_linear
+BIN_REGRESSION = regression_main
+
+all: $(BIN_VECTOR) $(BIN_MATRIX) $(BIN_LINEAR) $(BIN_REGRESSION)
+
+run_all:
+	./$(BIN_VECTOR)
+	./$(BIN_MATRIX)
+	./$(BIN_LINEAR)
+	./$(BIN_REGRESSION)
+	
+clean:
+	rm -f test_vector test_matrix test_linear regression_main
