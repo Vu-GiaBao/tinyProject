@@ -1,59 +1,97 @@
 #include "Regression.hpp"
-#include <cmath>
-#include <cassert>
 #include <fstream>
 #include <sstream>
-#include <iostream>
-using namespace std;
+#include <vector>
+#include <random>
+#include <cmath>
+#include <algorithm>
+#include "../include/LinearSystem.hpp"
 
-Vector Regression::Fit(const Matrix& A, const Vector& b)    // hồi quy tuyến tính
-{
-    Matrix A_pinv = A.pseudoInverse();
-    return A_pinv * b;
-}
+void Regression::LoadData(const std::string& filename, Matrix& A, Vector& b) {
+    std::ifstream infile(filename);
+    std::string line;
+    std::vector<std::vector<double>> features;
+    std::vector<double> targets;
 
-double Regression::RMSE(const Vector& y_pred, const Vector& y_true) // Root Mean Squared Error (RMSE)
-{
-    assert(y_pred.GetSize() == y_true.GetSize());
-    double sum = 0.0;                               // tổng bình phương sai số
-    for (int i = 0; i < y_pred.GetSize(); ++i)
-        sum += pow(y_pred[i] - y_true[i], 2);
-    return sqrt(sum / y_pred.GetSize());
-}
+    while (std::getline(infile, line)) {
+        std::stringstream ss(line);
+        std::string token;
+        std::vector<double> row;
 
-void Regression::read_csv(const string& filename, vector<vector<double>>& X, vector<double>& y) 
-{
-    ifstream file(filename);                                                                    // mở file + kiểm tra
-    if (!file.is_open()) 
-    {
-        cerr << "Failed to open file: " << filename << "\n";
-        return;
-    }
-    string line;    // đọc
-    while (getline(file, line)) 
-    {
-        stringstream ss(line);  // tách dòng
-        string token;
-        vector<double> numeric_values;
-        while (getline(ss, token, ',')) 
-        {
-            try 
-            {
-                numeric_values.push_back(stod(token));
-            } catch (...) {
-
+        int col = 0;
+        while (std::getline(ss, token, ',')) {
+            if (col >= 2 && col <= 7) { // MYCT, MMIN, MMAX, CACH, CHMIN, CHMAX
+                row.push_back(std::stod(token));
             }
+            if (col == 8) { // PRP
+                targets.push_back(std::stod(token));
+            }
+            col++;
         }
-        if (numeric_values.size() >= 9) // lọc cột 
-        {
-            vector<double> features(numeric_values.begin(), numeric_values.begin() + 8);    // tách features
-            double target = numeric_values[8];  // lấy target
-            X.push_back(features);
-            y.push_back(target);
-        }
+        features.push_back(row);
     }
-    file.close();
+
+    int rows = features.size();
+    int cols = features[0].size();
+    A = Matrix(rows, cols);
+    b = Vector(rows);
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            A(i + 1, j + 1) = features[i][j];
+        }
+        b(i + 1) = targets[i];
+    }
 }
 
+void Regression::TrainTestSplit(const Matrix& A, const Vector& b,
+                                Matrix& A_train, Vector& b_train,
+                                Matrix& A_test, Vector& b_test,
+                                double train_ratio) {
+    int total = A.numRows();
+    std::vector<int> indices(total);
+    for (int i = 0; i < total; ++i) indices[i] = i;
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(indices.begin(), indices.end(), g);
 
+    int train_size = static_cast<int>(total * train_ratio);
+    int test_size = total - train_size;
+    int cols = A.numCols();
 
+    A_train = Matrix(train_size, cols);
+    b_train = Vector(train_size);
+    A_test = Matrix(test_size, cols);
+    b_test = Vector(test_size);
+
+    for (int i = 0; i < train_size; ++i) {
+        for (int j = 0; j < cols; ++j)
+            A_train(i + 1, j + 1) = A(indices[i] + 1, j + 1);
+        b_train(i + 1) = b(indices[i] + 1);
+    }
+
+    for (int i = 0; i < test_size; ++i) {
+        for (int j = 0; j < cols; ++j)
+            A_test(i + 1, j + 1) = A(indices[train_size + i] + 1, j + 1);
+        b_test(i + 1) = b(indices[train_size + i] + 1);
+    }
+}
+
+Vector Regression::SolveLinearRegression(const Matrix& A, const Vector& b) {
+    Matrix At = A.transpose();
+    Matrix AtA = At * A;
+    Vector Atb = At * b;
+
+    LinearSystem sys(AtA, Atb);
+    return sys.Solve();
+}
+
+double Regression::ComputeRMSE(const Vector& y_true, const Vector& y_pred) {
+    assert(y_true.size() == y_pred.size());
+    double sum = 0.0;
+    for (int i = 0; i < y_true.size(); ++i) {
+        double diff = y_true[i] - y_pred[i];
+        sum += diff * diff;
+    }
+    return std::sqrt(sum / y_true.size());
+}

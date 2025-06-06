@@ -1,4 +1,4 @@
-# Makefile for Tiny Project - Part A
+# Part A
 
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Iinclude
@@ -44,3 +44,11 @@ clean:
 	rm -f $(BIN_VECTOR) $(BIN_MATRIX) $(BIN_LINEAR)
 
 test_LinearSystem: test_linear
+
+
+# Part B
+regression_main: regression_main.cpp regression/Regression.cpp $(VECTOR_SRC) $(MATRIX_SRC) $(LINEAR_SRC)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+run_regression:
+	./regression_main

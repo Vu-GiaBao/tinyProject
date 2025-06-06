@@ -1,6 +1,5 @@
 #ifndef matrix_hpp
 #define matrix_hpp
-
 #include <cassert>
 #include <iostream>
 #include "Vector.hpp"
@@ -8,46 +7,45 @@
 class Matrix 
 {
 protected:
-    int mNumRows;  // số hàng
-    int mNumCols;  // số cột
+    int mNumRows;  
+    int mNumCols;  
     double** mData;
 
-    void allocateMemory(int rows, int cols);   // cấp phát bộ nhớ cho mảng 2D
-    void freeMemory();                        // giải phóng bộ nhớ
+    void allocateMemory(int rows, int cols);   
+    void freeMemory();                        
 
 public:
-    // Khởi tạo, xóa, sao lưu
-    Matrix(int rows, int cols);     // tạo ma trận
-    Matrix(const Matrix& other);   // copy
-    ~Matrix();                    // xóa (giải phóng bộ nhớ)
+    Matrix(); 
+    Matrix(int rows, int cols);    
+    Matrix(const Matrix& other);   
+    ~Matrix();                    
 
-    // Gán
+    
     Matrix& operator=(const Matrix& other);
 
-    // Truy cập phần tử
+    
     int numRows() const { return mNumRows; }
     int numCols() const { return mNumCols; }
     double& operator()(int i, int j);
     const double& operator()(int i, int j) const;
 
-    // Toán tử
-    Matrix operator+() const;   // trả về bản sao
-    Matrix operator-() const;  // trả về ma trận đối
+    Matrix transpose() const;
+    Matrix operator+() const;   
+    Matrix operator-() const;  
 
-    Matrix operator+(const Matrix& rhs) const;    // cộng 2 ma trận
-    Matrix operator-(const Matrix& rhs) const;   // trừ 2 ma trận
-    Matrix operator*(const Matrix& rhs) const;  // nhân 2 ma trận
+    Matrix operator+(const Matrix& rhs) const;    
+    Matrix operator-(const Matrix& rhs) const;  
+    Matrix operator*(const Matrix& rhs) const;  
+    Matrix operator*(double scalar) const;                      
+    friend Matrix operator*(double scalar, const Matrix& mat);  
 
-    Matrix operator*(double scalar) const;                       // Ma trận nhân Số
-    friend Matrix operator*(double scalar, const Matrix& mat);  // Số nhân Ma trận
-
-    Vector operator*(const Vector& vec) const;  // Ma trận nhân Vector
+    Vector operator*(const Vector& vec) const;  
 
     Matrix pseudoInverse() const;
 
-    // Ma trận vuông
-    double determinant() const;  // định thức
-    Matrix inverse() const;     // đảo
+   
+    double determinant() const;  
+    Matrix inverse() const;     
 
     // Output 
     friend std::ostream& operator<<(std::ostream& os, const Matrix& m);

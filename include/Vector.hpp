@@ -1,7 +1,6 @@
 // include/Vector.hpp
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
-
 #include <cassert>
 #include <stdexcept>
 
@@ -12,6 +11,7 @@ private:
 
 public:
     // Constructor & Destructor
+    Vector(); // default constructor
     Vector(int size);
     Vector(const Vector& other);              // Copy constructor
     ~Vector();                                // Destructor
@@ -24,6 +24,7 @@ public:
     double operator[](int index) const;       // 0-based indexing (const)
 
     double& operator()(int index);            // 1-based indexing with check
+    double operator()(int index) const;  // 1-based indexing for const object
 
     // Arithmetic
     Vector operator+(const Vector& other) const;

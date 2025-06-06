@@ -143,7 +143,6 @@ Vector Matrix::operator*(const Vector& vec) const {
     return result;
 }
 
-// Đệ quy
 static double determinantRecursive(double** data, int n) {
     if (n == 1) return data[0][0];
     if (n == 2) return data[0][0]*data[1][1] - data[0][1]*data[1][0];
@@ -181,7 +180,7 @@ double Matrix::determinant() const {
     return determinantRecursive(mData, mNumRows);
 }
 
-// Tính ma trận nghịch đảo
+
 Matrix Matrix::inverse() const {
     assert(mNumRows == mNumCols);
 
@@ -198,7 +197,7 @@ Matrix Matrix::inverse() const {
         }
     }
 
-    // Phương pháp loại bỏ Gauss
+
     for (int i = 0; i < n; ++i) {
         // Phần tử trục (pivot)
         int maxRow = i;
@@ -211,12 +210,12 @@ Matrix Matrix::inverse() const {
             std::swap(augmented.mData[i], augmented.mData[maxRow]);
         }
 
-        // Kiểm tra (pivot=0 or not)
+        // (pivot=0 or not)
         if (fabs(augmented.mData[i][i]) < 1e-14) {
             throw std::runtime_error("Matrix is singular, cannot invert");
         }
 
-        // Chuẩn hóa (pivot=1)
+        // (pivot=1)
         double pivot = augmented.mData[i][i];
         for (int j = 0; j < 2 * n; ++j) {
             augmented.mData[i][j] /= pivot;
@@ -232,7 +231,6 @@ Matrix Matrix::inverse() const {
         }
     }
 
-    // Loại bỏ các phần tử khác trong cột pivot
     Matrix inv(n, n);
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -242,7 +240,7 @@ Matrix Matrix::inverse() const {
     return inv;
 }
 
-// Ma trận giả nghịch
+
 Matrix Matrix::pseudoInverse() const {
     // Use formula: A^+ = (A^T A)^-1 A^T
     Matrix At(mNumCols, mNumRows);
@@ -264,4 +262,20 @@ std::ostream& operator<<(std::ostream& os, const Matrix& m) {
         os << "\n";
     }
     return os;
+}
+
+Matrix::Matrix() {
+    mNumRows = 0;
+    mNumCols = 0;
+    mData = nullptr;
+}
+
+Matrix Matrix::transpose() const {
+    Matrix result(mNumCols, mNumRows);
+    for (int i = 1; i <= mNumRows; ++i) {
+        for (int j = 1; j <= mNumCols; ++j) {
+            result(j, i) = (*this)(i, j);
+        }
+    }
+    return result;
 }

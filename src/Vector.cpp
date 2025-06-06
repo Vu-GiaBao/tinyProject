@@ -1,6 +1,11 @@
 // src/Vector.cpp
 #include "../include/Vector.hpp"
 
+Vector::Vector() {
+    mSize = 0;
+    mData = nullptr;
+}
+
 Vector::Vector(int size) : mSize(size) {
     mData = new double[mSize]{};
 }
@@ -44,6 +49,13 @@ double Vector::operator[](int index) const {
 double& Vector::operator()(int index) {
     if (index < 1 || index > mSize) {
         throw std::out_of_range("Index out of bounds (1-based)");
+    }
+    return mData[index - 1];
+}
+
+double Vector::operator()(int index) const {
+    if (index < 1 || index > mSize) {
+        throw std::out_of_range("Index out of bounds (const)");
     }
     return mData[index - 1];
 }
