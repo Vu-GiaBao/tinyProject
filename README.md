@@ -94,7 +94,7 @@ Removes all executable files:
 ## Project Structure
 
 ```
-tinyProject/
+TinyProject/
 ├── data/                   # Dataset
 │   └── machine.data
 │
@@ -134,9 +134,9 @@ tinyProject/
 ---
 
 ## Authors
-- Group members: 
-Vu Gia Bao - 10423014
-Nguyen Minh Phu - 10423090
-Le Huy Thinh - 10423105
-- Course: Programming 2 SS25  
-- Instructor: Huynh Trung Hieu
+- **Group members:**
+  - Vu Gia Bao – `10423014`
+  - Nguyen Minh Phu – `10423090`
+  - Le Huy Thinh – `10423105`
+- **Course:** Programming 2 SS25  
+- **Instructor:** Huynh Trung Hieu
