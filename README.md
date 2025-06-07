@@ -17,6 +17,10 @@ This project implements core numerical linear algebra components (vectors, matri
   - `det()`, `inverse()`, `pseudoInverse()`
 - `LinearSystem` class:
   - Solves `Ax = b` using Gaussian Elimination with pivoting
+- `PosSymLinSystem` class (**bonus**):
+  - Inherits from `LinearSystem`
+  - Overrides `Solve()` using **Conjugate Gradient method**
+  - Efficient for symmetric positive-definite matrices
 - Unit tests provided in `test/` directory
 
 ---
@@ -52,6 +56,7 @@ make run_all        # Run all test cases and regression
 ./test_vector       # Tests for Vector
 ./test_matrix       # Tests for Matrix
 ./test_linear       # Tests for LinearSystem
+./test_possym       # Tests for PosSymLinSystem
 ```
 
 ---
@@ -81,6 +86,7 @@ Removes all executable files:
 - `test_vector`
 - `test_matrix`
 - `test_linear`
+- `test_possym`
 - `regression_main`
 
 ---
@@ -93,24 +99,27 @@ tinyProject/
 │   └── machine.data
 │
 ├── include/                # Header files (.hpp)
-│   ├── Vector.hpp
+│   ├── LinearSystem.hpp
 │   ├── Matrix.hpp
-│   └── LinearSystem.hpp
+│   ├── PosSymLinSystem.hpp
+│   └── Vector.hpp
 │
 ├── regression/             # Regression logic (Part B)
-│   ├── Regression.hpp
+│   ├── regression_main.cpp
 │   ├── Regression.cpp
-│   └── regression_main.cpp
+│   └── Regression.hpp
 │
 ├── src/                    # Implementations (Part A)
-│   ├── Vector.cpp
+│   ├── LinearSystem.cpp
 │   ├── Matrix.cpp
-│   └── LinearSystem.cpp
+│   ├── PosSymLinSystem.cpp
+│   └── Vector.cpp
 │
 ├── test/                   # Unit tests for Part A
-│   ├── test_Vector.cpp
-│   ├── test_Matrix.cpp
 │   ├── test_LinearSystem.cpp
+│   ├── test_Matrix.cpp
+│   ├── test_PosSym.cpp
+│   └── test_Vector.cpp
 │
 ├── Makefile                # Build instructions
 └── README.md               # Project documentation
@@ -125,7 +134,9 @@ tinyProject/
 ---
 
 ## Authors
-- Group members: Vu Gia Bao - 10423014
-                 Nguyen Minh Phu - 10423090
-                 Le Huy Thinh - 10423105
+- Group members: 
+Vu Gia Bao - 10423014
+Nguyen Minh Phu - 10423090
+Le Huy Thinh - 10423105
 - Course: Programming 2 SS25  
+- Instructor: Huynh Trung Hieu

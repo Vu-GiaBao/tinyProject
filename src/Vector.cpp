@@ -89,3 +89,12 @@ Vector Vector::operator*(double scalar) const {
 int Vector::size() const {
     return mSize;
 }
+
+double Vector::operator*(const Vector& other) const {
+    assert(mSize == other.mSize);
+    double sum = 0.0;
+    for (int i = 0; i < mSize; ++i) {
+        sum += mData[i] * other.mData[i];
+    }
+    return sum;
+}

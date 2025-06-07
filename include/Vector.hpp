@@ -22,6 +22,8 @@ public:
     // Access operators
     double& operator[](int index);            // 0-based indexing (non-const)
     double operator[](int index) const;       // 0-based indexing (const)
+    // Dot product
+    double operator*(const Vector& other) const;
 
     double& operator()(int index);            // 1-based indexing with check
     double operator()(int index) const;  // 1-based indexing for const object
